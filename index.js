@@ -52,13 +52,13 @@ app.get("/protected", authCheck, (req, res) => {
 app.get("/process", authCheck, async (req, res) => {
    const data = await axios({
       method: 'get',
-      url: `https://gmail.googleapis.com/gmail/v1/users/me/threads?q= after:2023/05/20 label:INBOX label:UNREAD`,
+      url: `https://gmail.googleapis.com/gmail/v1/users/me/threads?q= after:2023/05/20  label:INBOX label:UNREAD`,
       headers: {
          Authorization: `Bearer ${req.user.accessToken}`
       }
    })
-
-   if (data.data !== undefined) {
+   console.log(data.data)
+   if (data.data.resultSizeEstimate) {
       const threads = data.data.threads
       console.log("You talking to me", threads)
       const emails = []
@@ -78,7 +78,6 @@ app.get("/process", authCheck, async (req, res) => {
          // console.log(singleHeader)
          for (let j = 0; j < singleHeader.length; j++) {
             if (singleHeader[j].name === "From" && singleHeader[j].value === req.user.email) {
-               console.log("hello")
                count = 1
                break
             }
@@ -89,11 +88,11 @@ app.get("/process", authCheck, async (req, res) => {
          if (!count) {
             // console.log("yes",singleThread.data)
             console.log("yes")
-            console.log(messages[0].headers)
+            let singleHeader = messages[0].payload.headers
             let left = []
-            for (let i = 0; i < messages[0].headers; i++) {
+            for (let i = 0; i < messages[0].payload.headers; i++) {
                // console.log(messages)
-               let singleHeader = messages[0].headers
+               
 
                if (singleHeader[i].name === "From" || singleHeader[i].name === "Subject") {
                   console.log(singleHeader[i])
@@ -153,7 +152,7 @@ app.get("/done", authCheck, (req, res) => {
 
 app.get('/logout', function (req, res) {
    req.session.destroy()
-   res.send('logout')
+   res.redirect("/")
 }
 );
 
