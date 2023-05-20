@@ -52,7 +52,7 @@ app.get("/protected", authCheck, (req, res) => {
 app.get("/process", authCheck, async (req, res) => {
    const data = await axios({
       method: 'get',
-      url: `https://gmail.googleapis.com/gmail/v1/users/me/threads?q= after:2023/05/20 label:INBOX from:saskuejoshi@gmail.com`,
+      url: `https://gmail.googleapis.com/gmail/v1/users/me/threads?q= after:2023/05/20 label:INBOX label:UNREAD`,
       headers: {
          Authorization: `Bearer ${req.user.accessToken}`
       }
@@ -65,7 +65,7 @@ app.get("/process", authCheck, async (req, res) => {
       threads.forEach(async (thread) => {
          let singleThread = await axios({
             method: 'get',
-            url: `https://gmail.googleapis.com/gmail/v1/users/me/threads/${thread.id}`,
+            url: `https://gmail.googleapis.com/gmail/v1/users/me/threads/${thread.id}?q= is:unread`,
             headers: {
                Authorization: `Bearer ${req.user.accessToken}`
             }
