@@ -65,7 +65,7 @@ app.get("/process", authCheck, async (req, res) => {
 
          const singleThread = await axios({
             method: "get",
-            url: `https://gmail.googleapis.com/gmail/v1/users/me/threads/${thread.id}?`,
+            url: `https://gmail.googleapis.com/gmail/v1/users/me/threads/${thread.id}??q= is:unread`,
             headers: {
                Authorization: `Bearer ${req.user.accessToken}`
             }
